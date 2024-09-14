@@ -1,10 +1,6 @@
 import os
 import sys
 import pickle
-sys.path.append('/home/dahee/T2I') 
-sys.path.append('/home/dahee/T2I/diffusers/src')
-os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:128"
-os.environ['CUDA_VISIBLE_DEVICES'] = '2'
 import cv2
 import torch
 import matplotlib.pyplot as plt
