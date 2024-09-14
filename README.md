@@ -1,1 +1,1 @@
-# diffusion_XAI
+# Diffusion_XAI
