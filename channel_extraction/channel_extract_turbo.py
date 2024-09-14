@@ -1,11 +1,6 @@
 import os
 import sys
 import pickle
-sys.path.append('/home/dahee/T2I') 
-sys.path.append('/home/dahee/T2I/ovam/')
-os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:128"
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
-
 import cv2
 import torch
 import matplotlib.pyplot as plt
@@ -129,11 +124,6 @@ def channel_scoring(down,mid,up,mask):
     
     k=4
     for att in layer_list:
-        # ch , res = org_layer.shape[1],org_layer.shape[2]
-        # att = cv2.resize(att.astype(float), (128,128), interpolation = cv2.INTER_AREA)#.astype(bool)
-
-        # att = cv2.resize(att, (128, 128), interpolation=cv2.INTER_LINEAR)
-        # att = np.expand_dims(att, axis=0)
         att = F.interpolate(
                             torch.tensor(att)[None,...],
                             size=(128,128),
@@ -156,16 +146,12 @@ def channel_scoring(down,mid,up,mask):
         tp = (ma*mask.flatten()).sum(axis=1)
         fp = (ma*(1-mask.flatten())).sum(axis=1)
         fn = mask.sum()-tp
-        # tn = (~mask).sum() - fn
         
         tv_score = []
         for i in range(len(tp)):
             tversky_s = np.sum(tp[i]+1e-10)/(np.sum(tp[i])+2*np.sum(fp[i])+1*np.sum(fn[i])+1e-10)            
             tv_score.append(tversky_s)
-
         scores.append(tv_score)  
-    # if step % 10 == 0:
-        # print(f"Scoring {step}-steps are done!")
     return scores
     
 def channel_extract(scores,n_mask_ratio=0.1):
@@ -192,8 +178,6 @@ def main():
     args = get_args()
 
     os.environ['CUDA_VISIBLE_DEVICES'] = str(args.device)
-    # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    
     if args.seed is None:
         if args.n_samples > 1:
             seed = list(np.arange(0,args.n_samples,1))
@@ -206,7 +190,6 @@ def main():
     att_prompt = args.att_prompt
     att_idx = args.att_idx
     n_mask_ratio = args.n_mask_ratio
-    
     
     pipe = AutoPipelineForText2Image.from_pretrained("stabilityai/sdxl-turbo", torch_dtype=torch.float16, variant="fp16")
     pipe = pipe.to("cuda")
