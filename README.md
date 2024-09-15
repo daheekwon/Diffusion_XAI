@@ -1,5 +1,5 @@
 # Diffusion_XAI  
-Diverse and Creative Image Generation by automatically identifying the representations in the Text-to-Image Diffusion Model.
+Diverse and Creative Image Generation by automatically identifying the representations in the Text-to-Image Diffusion Model
 
 
 ### Description  
